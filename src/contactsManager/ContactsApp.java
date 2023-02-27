@@ -8,6 +8,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class ContactsApp {
@@ -52,8 +53,8 @@ public class ContactsApp {
         }
         try {
             Files.write(pathToFile, newFile);
-        } catch (IOException iox) {
-            iox.printStackTrace();
+        } catch (IOException error) {
+            error.printStackTrace();
         }
     }
 
@@ -100,15 +101,17 @@ public class ContactsApp {
                 """);
         String name = input.getString();
         List<Contact> currentContactsList = createContactsList(pathToFile);
+        Contact contactToDelete = null;
         for (Contact contact : currentContactsList) {
-            if (contact.getName().equals(name)){
-                currentContactsList.remove(contact);
-            System.out.printf("""
-                    %s - %s has been delete from your contacts.
-                    """, name, contact.getPhoneNumber());
+            if (contact.getName().equals(name)) {
+                contactToDelete = contact;
+                System.out.printf("""
+                        %s - %s has been delete from your contacts.
+                        """, name, contact.getPhoneNumber());
             }
-            rewriteContactsFile(currentContactsList);
         }
+        currentContactsList.remove(contactToDelete);
+        rewriteContactsFile(currentContactsList);
         again();
     }
 
@@ -123,9 +126,9 @@ public class ContactsApp {
         for (Contact contact : currentContactsList) {
             if (contact.getName().equals(userChoice)) {
                 System.out.println("""
-                Name | Phone number
-                ---------------
-                """);
+                        Name | Phone number
+                        ---------------
+                        """);
                 assert false;
                 System.out.println(contact.getName() + " " + "|" + " " + contact.getPhoneNumber());
             }
